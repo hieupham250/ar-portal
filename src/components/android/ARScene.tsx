@@ -12,7 +12,7 @@ export default function ARScene({
   const meshRef = useRef<THREE.Mesh | null>(null);
   const draggingRef = useRef<boolean>(false);
   const [placed, setPlaced] = useState<boolean>(false);
-  const [scale, setScale] = useState<number>(1);
+  const [zoomScale, setZoomScale] = useState<number>(1);
   const tempMatrix = new THREE.Matrix4();
 
   const texture = useLoader(THREE.TextureLoader, image?.urlImg ?? "");
@@ -36,7 +36,6 @@ export default function ARScene({
 
         mesh.position.copy(position);
         mesh.quaternion.copy(quaternion);
-        // mesh.scale.setScalar(1);
 
         setPlaced(true);
       }
@@ -68,7 +67,7 @@ export default function ARScene({
 
         if (lastDistance) {
           const delta = newDistance - lastDistance;
-          setScale((prev) => {
+          setZoomScale((prev) => {
             const next = prev + delta * 0.001;
             return Math.max(0.1, Math.min(2, next));
           });
@@ -158,9 +157,9 @@ export default function ARScene({
 
   useEffect(() => {
     if (meshRef.current) {
-      meshRef.current.scale.set(scale, scale, scale);
+      meshRef.current.scale.set(zoomScale, zoomScale, zoomScale);
     }
-  }, [scale]);
+  }, [zoomScale]);
 
   return (
     <>
